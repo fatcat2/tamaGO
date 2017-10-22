@@ -4,7 +4,7 @@ var twilio_auth = process.env.twilio_auth;
 const client = require('twilio')(twilio_sid, twilio_auth);
 
 client.calls.create({
-  url: 'http://demo.twilio.com/docs/voice.xml',
+  url: './voice.xml',
   to: '+14087755735',
   from: twilio_number,
 })
