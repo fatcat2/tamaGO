@@ -108,7 +108,7 @@ app.post('/message', (req, res) => {
 				db.collection(sqID).find({}).toArray(function(err, res){
 					for(x of res){
 						client.calls.create({
-							url: 'http://demo.twilio.com/docs/voice.xml',
+							url: 'https://handler.twilio.com/twiml/EHb4eebdcb8f5f7a35efb023551586619e',
 							to: x.number,
 							from: twilio_number
 						})
