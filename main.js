@@ -275,12 +275,14 @@ app.post('/message', (req, res) => {
 					leader: 0
 				}
 				db.collection("users").find(find_all).toArray(function(err, result){
+					// var len = incoming_msg.length;
+					var msg = incoming_msg.substring(1)
 					for(x of result){
 						console.log(x.number);
 						client.messages.create({
 							to: x.number,
 							from: twilio_number,
-							body: incoming_msg
+							body: msg
 						})
 					}
 					console.log("Sent following message to group " + result[0].squadID + ":\n" + incoming_msg + "\n---------\n");
