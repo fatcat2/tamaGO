@@ -182,9 +182,9 @@ app.post('/message', (req, res) => {
 							to: x.number,
 							from: twilio_number,
 							body: "You have been removed from group " + sqID
-						})
+						});
 					}
-				})
+				});
 				db.collection('users').deleteMany({squadID: sqID}, function(err, res){
 					if (err) throw err;
 					console.log(res.result. n + " objects deleted");
