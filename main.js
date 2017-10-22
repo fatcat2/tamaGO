@@ -137,7 +137,7 @@ app.post('/message', (req, res) => {
 				db.collection("squads").find({squadID: sqID}, {$exists: true}).toArray(function(err, res){
 					if (err) throw err;
 					console.log(res);
-					if(res){
+					if(res.length != 0){
 						db.collection(sqID).insertOne(document, function(err, buf){
 							if (err) throw err;
 							console.log("Number " + req.body.From + " has responded!");
