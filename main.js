@@ -128,6 +128,7 @@ app.post('/message', (req, res) => {
 			db.collection("users").findOne(find_params, function(err, result){
 				if (err) throw err;
 				sqID = result.squadID;
+				console.log(sqID);
 				var document = {
 					number: req.body.From,
 					squadID: sqID,
@@ -135,6 +136,7 @@ app.post('/message', (req, res) => {
 				}
 				db.collection("squads").find({squadID: sqID}, {$exists: true}).toArray(function(err, res){
 					if (err) throw err;
+					console.log(res);
 					if(res){
 						db.collection(sqID).insertOne(document, function(err, buf){
 							if (err) throw err;
