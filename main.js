@@ -103,17 +103,26 @@ app.post('/message', (req, res) => {
 					}
 					console.log("inside" + message);
 				});
-
-				// db.collection(sqID).find({}).toArray(function(err, res){
-				// 	for(x of res){
-				// 		client.messages.create({
-				// 			to: x.number,
-				// 			from: twilio_number,
-				// 			body: "message"
-				// 		})
-				// 	}
-				// });
-			});
+		});
+	}else if(incoming_msg == '!recall'){
+		MongoClient.connect(url, function(err, db){
+			if (err) throw err;
+			var find_params = {
+				number: req.body.From,
+				leader: 1
+			}
+			db.collection("users").findOne(find_params, function(err, result){
+				if (err) throw err;
+				sqID = result.squadID;
+				var document = {
+					number: req.body.From,
+					squadID: sqID,
+				}
+				db.collection(sqID).find({}).toArray(function(err, res){
+					for(x of res){
+						
+					}
+				});
 		});
 	}else if(incoming_msg == 'Y' || incoming_msg == 'N'){
 		//as results come in, compare size of temp collection to number of members in squad.
