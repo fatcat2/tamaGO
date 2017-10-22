@@ -1,7 +1,9 @@
 # squadup
 
-Ever wanted to go home?
+Have you ever been out with a group and wanted to go home, but didn't speak up either out of fear of being rude or some other repurcussion?
 
-Just text the following number with your name and that you want to go home.
+Squadup lets you go home.
 
-ex: My name is Ryan and I want to go home.
+It also helps facilitate communication over a universal phone standard. This way, no one is left out.
+
+
