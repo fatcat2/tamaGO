@@ -103,8 +103,10 @@ app.post('/message', (req, res) => {
 					}
 					console.log("inside" + message);
 				});
+			});
 		});
 	}else if(incoming_msg == '!recall'){
+		console.log("recall");
 		MongoClient.connect(url, function(err, db){
 			if (err) throw err;
 			var find_params = {
@@ -120,9 +122,14 @@ app.post('/message', (req, res) => {
 				}
 				db.collection(sqID).find({}).toArray(function(err, res){
 					for(x of res){
-						
+						client.calls.create({
+							url: 'http://demo.twilio.com/docs/voice.xml',
+							to: x.number,
+							from: twilio_number
+						})
 					}
 				});
+			});
 		});
 	}else if(incoming_msg == 'Y' || incoming_msg == 'N'){
 		//as results come in, compare size of temp collection to number of members in squad.
