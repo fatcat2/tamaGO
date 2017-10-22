@@ -98,6 +98,9 @@ app.post('/message', (req, res) => {
 				});
 			});
 		});
+
+		//add ID to list of collections that are in polls collection
+		
 	}else if(incoming_msg.charAt(0) == '!'){
 		MongoClient.connect(url, function(err, db){
 			if(err) throw err;
