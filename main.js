@@ -10,8 +10,6 @@ const twilio = require('twilio');
 const client = new twilio(twilio_sid, twilio_auth);
 
 var url = process.env.mongo_uri;
-var twilio_sid = process.env.twilio_sid;
-var twilio_auth = process.env.twilio_auth;
 
 const twilio_number = '+17656370247';
 
@@ -160,7 +158,7 @@ app.post('/message', (req, res) => {
 			if(err) throw err;
 			db.collection("users").insertOne(document, function(err, res){
 				if (err) throw err;
-				console.log("Added a squad member!");
+				console.log("Added a squad member: " + document.number);
 				db.close();
 			});
 		});
