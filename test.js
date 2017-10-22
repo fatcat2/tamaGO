@@ -1,14 +1,11 @@
-// Twilio Credentials
-const accountSid = process.env.twilio_sid;
-const authToken = process.env.twilio_auth;
-
-// require the Twilio module and create a REST client
+const twilio_number = '+17656370247';
+var twilio_sid = process.env.twilio_sid;
+var twilio_auth = process.env.twilio_auth;
 const client = require('twilio')(accountSid, authToken);
 
-client.messages
-  .create({
-    to: '+14087755735',
-    from: '+17656370247',
-    body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
-  })
-  .then((message) => console.log(message.sid));
+client.calls.create({
+  url: 'http://demo.twilio.com/docs/voice.xml',
+  to: '+4087755735',
+  from: twilio_number,
+})
+.then((call) => process.stdout.write(call.sid));
