@@ -158,7 +158,7 @@ app.post('/message', (req, res) => {
 			if(err) throw err;
 			db.collection("users").insertOne(document, function(err, res){
 				if (err) throw err;
-				console.log("Added a squad member: " + document.number);
+				console.log("Added a squad member: " + document.number + " to squad " + document.squadID);
 				db.close();
 			});
 		});
