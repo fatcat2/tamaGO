@@ -176,6 +176,15 @@ app.post('/message', (req, res) => {
 					number: req.body.From,
 					squadID: sqID,
 				}
+				db.collection('users').find({squadID:sqID}).toArray(function(err, res){
+					for(x of res){
+						client.messages.create({
+							to: x.number,
+							from: twilio_number,
+							body: "You have been removed from group " + sqID
+						})
+					}
+				})
 				db.collection('users').deleteMany({squadID: sqID}, function(err, res){
 					if (err) throw err;
 					console.log(res.result. n + " objects deleted");
