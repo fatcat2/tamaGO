@@ -138,6 +138,7 @@ app.post('/message', (req, res) => {
 					if (err) throw err;
 					console.log(res);
 					if(res.length != 0){
+						console.log(document);
 						db.collection(sqID).insertOne(document, function(err, buf){
 							if (err) throw err;
 							console.log("Number " + req.body.From + " has responded!");
