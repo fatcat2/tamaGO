@@ -172,6 +172,31 @@ app.post('/message', (req, res) => {
 				db.close();
 			});
 		});
+	}else if(incoming_msg == '!goodbye'){
+		MongoClient.connect(url, function(err, db){
+			if (err) throw err;
+			var find_params = {
+				number: req.body.From,
+				leader: 1
+			}
+			db.collection("users").findOne(find_params, function(err, result){
+				if (err) throw err;
+				sqID = result.squadID;
+				var document = {
+					number: req.body.From,
+					squadID: sqID,
+				}
+				db.collection('users').deleteMany({squadID: sqID}, function(err, res){
+					if (err) throw err;
+					console.log(res.result. n + " objects deleted");
+				});
+				db.collection('squads').deleteMany({squadID: sqID}, function(err, res){
+					if (err) throw err;
+					console.log(res.result.n + " objects deleted");
+				});
+				db.close();
+			});
+		});
 	}else if(incoming_msg == '!leave'){
 		//text everyone it's time to leave
 		var squad_count = 1;
