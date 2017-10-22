@@ -42,7 +42,7 @@ app.post('/message', (req, res) => {
 	if(incoming_msg == 'squadup!'){
 		var str = randomstring.generate({
 			length: 4,
-			charset: 'alphanumeric',
+			charset: 'ABCDEFGHJKLMNPQRSTUVWXYZ123456789',
 			capitalization: 'uppercase'
 		});
 		var document = {
@@ -143,9 +143,9 @@ app.post('/message', (req, res) => {
 			db.collection("users").findOne(find_params, function(err, result){
 				if (err) throw err;
 				sqID = result.squadID;
-				console.log("line 74");
-				console.log(result);
-				console.log(sqID);
+				// console.log("line 74");
+				// console.log(result);
+				// console.log(sqID);
 				var document = {
 					number: req.body.From,
 					squadID: sqID,
