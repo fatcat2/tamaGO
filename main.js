@@ -285,7 +285,7 @@ app.post('/message', (req, res) => {
 							body: msg
 						})
 					}
-					console.log("Sent following message to group " + result[0].squadID + ":\n" + incoming_msg + "\n---------\n");
+					// console.log("Sent following message to group " + result[0].squadID + ":\n" + incoming_msg + "\n---------\n");
 				});
 			});
 		});
