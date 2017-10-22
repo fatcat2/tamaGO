@@ -1,39 +1,21 @@
 const http = require('http');
 const express = require('express');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-const VoiceResponse = require('twilio').twiml.VoiceResponse;
-const language  = require('@google-cloud/language');
 const MongoClient = require('mongodb').MongoClient;
 const randomstring = require("randomstring");
-var url = process.env.mongo_uri;
-
-var _SQUADID = "";
-var _SQUADCOUNT = 0;
-
-
-const twilio_number = '+17656370247';
-var twilio_sid = process.env.twilio_sid;
-var twilio_auth = process.env.twilio_auth;
 const twilio = require('twilio');
 const client = new twilio(twilio_sid, twilio_auth);
+
+var url = process.env.mongo_uri;
+var twilio_sid = process.env.twilio_sid;
+var twilio_auth = process.env.twilio_auth;
+
+const twilio_number = '+17656370247';
 
 const app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({	extended: true }));
-
-app.post('/record', (req,res) => {
-	const twiml = new VoiceResponse();
-	twiml.say('Hello, please record your plea for help after the beep.');
-
-	twiml.record({transcribe: true, maxLength: 30});
-
-	twiml.hangup();
-	res.type('text/xml');
-	res.send(twiml.toString());
-
-	console.log(twiml.toString());
-})
 
 app.post('/message', (req, res) => {
 	const twiml = new MessagingResponse();
@@ -143,17 +125,21 @@ app.post('/message', (req, res) => {
 			db.collection("users").findOne(find_params, function(err, result){
 				if (err) throw err;
 				sqID = result.squadID;
-				// console.log("line 74");
-				// console.log(result);
-				// console.log(sqID);
 				var document = {
 					number: req.body.From,
 					squadID: sqID,
 					vote: incoming_msg
 				}
-				db.collection(sqID).insertOne(document, function(err,res){
+				db.collection("squads").find(document, {$exists: true}).toArray(function(err, res){
 					if (err) throw err;
-					console.log("Number " + req.body.From + " has responded!");
+					if(res){
+						db.collection(sqID).insertOne(document, function(err, buf){
+							if (err) throw err;
+							console.log("Number " + req.body.From + " has responded!");
+						});
+					}else{
+						twiml.message("Your squad's poll hasn't opened yet");
+					}
 				});
 			});
 		});
