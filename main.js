@@ -3,6 +3,9 @@ const express = require('express');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const MongoClient = require('mongodb').MongoClient;
 const randomstring = require("randomstring");
+
+var twilio_sid = process.env.twilio_sid;
+var twilio_auth = process.env.twilio_auth;
 const twilio = require('twilio');
 const client = new twilio(twilio_sid, twilio_auth);
 
