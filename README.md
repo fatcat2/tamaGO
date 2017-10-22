@@ -16,4 +16,5 @@ As the developer, I made the choice of making this entirely over SMS due to my w
 
 In the end, while this service was created to help me, I want it to help others too. I'm excited to continue work on the project through at least the next few months. Getting out of the free tier of Twilio is one of my goals for the near future, and as I start to get users I hope to start learning more about scaling, especially with the MongoDB database. Eventually, being able to add international numbers and services would be a goal that would truly allow global access to the service.
 
+DubHacks 2017 Submission
 Logo courtesy of Kallista Zhang
