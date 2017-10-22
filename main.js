@@ -271,8 +271,8 @@ app.post('/message', (req, res) => {
 				if(err) throw err;
 				// console.log(result.squadID);
 				var find_all = {
-					squadID: result.squadID,
-					leader: 0
+					squadID: result.squadID
+					// leader: 0
 				}
 				db.collection("users").find(find_all).toArray(function(err, result){
 					// var len = incoming_msg.length;
