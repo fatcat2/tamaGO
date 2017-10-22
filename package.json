@@ -1,0 +1,25 @@
+{
+  "name": "squadup",
+  "version": "1.0.0",
+  "description": "dubhacks project by ryan",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fatcat2/squadup.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fatcat2/squadup/issues"
+  },
+  "homepage": "https://github.com/fatcat2/squadup#readme",
+  "dependencies": {
+    "@google-cloud/language": "^1.0.0",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "twilio": "^3.9.0"
+  }
+}
