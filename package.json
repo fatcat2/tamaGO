@@ -20,6 +20,7 @@
     "@google-cloud/language": "^1.0.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "randomstring": "^1.1.5",
     "twilio": "^3.9.0"
   }
 }
