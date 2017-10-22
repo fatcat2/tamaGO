@@ -75,7 +75,7 @@ app.post('/message', (req, res) => {
 					var yes_percentage = yeses/total;
 					var no_percentage = 1 - yes_percentage;
 					if(yes_percentage >= no_percentage){
-						message = "Alright guys/girls/nonbinary, let's wrap it up!";
+						message = "Alright, let's wrap it up!";
 					}else if(yes_percentage < no_percentage){
 						message = "We're still on!";
 					}
