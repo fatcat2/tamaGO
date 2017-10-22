@@ -7,6 +7,10 @@ const MongoClient = require('mongodb').MongoClient;
 const randomstring = require("randomstring");
 var url = process.env.mongo_uri;
 
+var _SQUADID = "";
+var _SQUADCOUNT = 0;
+
+
 const twilio_number = '+17656370247';
 var twilio_sid = process.env.twilio_sid;
 var twilio_auth = process.env.twilio_auth;
@@ -34,7 +38,7 @@ app.post('/record', (req,res) => {
 app.post('/message', (req, res) => {
 	const twiml = new MessagingResponse();
 	var incoming_msg = req.body.Body;
-	console.log(req.body);
+	// console.log(req.body);
 	if(incoming_msg == 'squadup!'){
 		var str = randomstring.generate({
 			length: 4,
@@ -55,6 +59,33 @@ app.post('/message', (req, res) => {
 			});
 		});
 		twiml.message("Give your friends this code: " + str);
+	}else if(incoming_msg == 'Y' || incoming_msg == 'N'){
+		//as results come in, compare size of temp collection to number of members in squad.
+		//find squadID first
+		MongoClient.connect(url, function(err, db){
+			if (err) throw err;
+			var sqID = "";
+			var find_params = {
+				number: req.body.From,
+				leader: 1
+			}
+			db.collection("users").findOne(find_params, function(err, result){
+				if (err) throw err;
+				sqID = result.squadID;
+				console.log("line 74");
+				console.log(result);
+				console.log(sqID);
+				var document = {
+					number: req.body.From,
+					squadID: sqID,
+					vote: incoming_msg
+				}
+				db.collection(sqID).insertOne(document, function(err,res){
+					if (err) throw err;
+					console.log("Number " + req.body.From + " has responded!");
+				});
+			});
+		});
 	}else if(incoming_msg.length == 4){
 		//code!
 		var document = {
@@ -72,6 +103,8 @@ app.post('/message', (req, res) => {
 		});
 	}else if(incoming_msg == '!leave'){
 		//text everyone it's time to leave
+		var squad_count = 1;
+		var squad_ID_big = "";
 		MongoClient.connect(url, function(err, db){
 			if(err) throw err;
 			var find_params = {
@@ -80,27 +113,57 @@ app.post('/message', (req, res) => {
 			}
 			db.collection("users").findOne(find_params, function(err, result){
 				if(err) throw err;
-				console.log(result.squadID);
+				// console.log(result.squadID);
+				squad_ID_big = result.squadID;
+				var counter = 1;
 				var find_all = {
 					squadID: result.squadID,
 					leader: 0
 				}
-				db.collection("users").find(find_all).toArray(function(err, result){
-					for(x of result){
-						console.log(x.number);
+				db.collection("users").find(find_all).toArray(function(err, res){
+					for(x of res){
+						// console.log(x.number);	
+						counter = counter + 1;
+						// console.log(counter);
 						client.messages.create({
 							to: x.number,
 							from: twilio_number,
 							body: "Your squad leader has indicated that it is time to leave.\nIf you'd like to leave, reply Y. If not, reply N."
 						})
-						.then((message) => console.log(message.sid));
+						// .then((message) => console.log(message.sid));
 					}
+					console.log("Poll started! Squad: " + squad_ID_big + " has " + counter + " members.");
+					var x = {
+						squadID: squad_ID_big,
+						squadCount: counter
+					}
+					db.collection("squads").insertOne(x, function(err, res){
+						if (err) throw err;
+						// console.log(x);
+						// console.log("Poll started! Squad: " + squad_info.squadID + " has " + squad_count + " members.");
+					});
 				});
+				// squad
 			});
 		});
+		//get number of members in squad and squadID
+		var squad_info = {
+			squadID: squad_ID_big,
+			squadCount: squad_count
+		}
 
-		//add ID to list of collections that are in polls collection
-		
+		//add squadID and number of members in squad to squads collection
+		MongoClient.connect(url, function(err, db){
+			if (err) throw err;
+			db.collection("squads").insertOne(squad_info, function(err, res){
+				if (err) throw err;
+				console.log(squad_info);
+				// console.log("Poll started! Squad: " + squad_info.squadID + " has " + squad_count + " members.");
+			});
+		});
+		//as results come in, compare size of temp collection to number of members in squad.
+		//when the two are equal, calculate then report results through text
+		//have leader be able to !callback remaining members
 	}else if(incoming_msg.charAt(0) == '!'){
 		MongoClient.connect(url, function(err, db){
 			if(err) throw err;
@@ -110,7 +173,7 @@ app.post('/message', (req, res) => {
 			}
 			db.collection("users").findOne(find_params, function(err, result){
 				if(err) throw err;
-				console.log(result.squadID);
+				// console.log(result.squadID);
 				var find_all = {
 					squadID: result.squadID,
 					leader: 0
@@ -123,8 +186,8 @@ app.post('/message', (req, res) => {
 							from: twilio_number,
 							body: incoming_msg
 						})
-						.then((message) => console.log(message.sid));
 					}
+					console.log("Sent following message to group " + result[0].squadID + ":\n" + incoming_msg + "\n---------\n");
 				});
 			});
 		});
