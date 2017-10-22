@@ -24,7 +24,7 @@ app.post('/message', (req, res) => {
 	const twiml = new MessagingResponse();
 	var incoming_msg = req.body.Body;
 	// console.log(req.body);
-	if(incoming_msg == 'squadup!'){
+	if(incoming_msg == 'tamago!'){
 		var str = randomstring.generate({
 			length: 4,
 			charset: 'ABCDEFGHJKLMNPQRSTUVWXYZ123456789',
