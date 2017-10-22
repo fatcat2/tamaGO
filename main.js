@@ -133,7 +133,7 @@ app.post('/message', (req, res) => {
 					squadID: sqID,
 					vote: incoming_msg
 				}
-				db.collection("squads").find(document, {$exists: true}).toArray(function(err, res){
+				db.collection("squads").find({number: req.body.From, squadID: sqID}, {$exists: true}).toArray(function(err, res){
 					if (err) throw err;
 					if(res){
 						db.collection(sqID).insertOne(document, function(err, buf){
