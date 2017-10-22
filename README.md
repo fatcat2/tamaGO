@@ -1,4 +1,4 @@
-![logo.png]()
+![logo.png](https://github.com/fatcat2/tamaGO/blob/master/egg.png)
 ##tamaGO!
 
 Have you ever been out with a group and wanted to go home, but didn't speak up either out of fear of being rude or some other repercussion?
