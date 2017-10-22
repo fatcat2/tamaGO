@@ -59,6 +59,62 @@ app.post('/message', (req, res) => {
 			});
 		});
 		twiml.message("Give your friends this code: " + str);
+	}else if(incoming_msg == '!end'){
+		MongoClient.connect(url, function(err, db){
+			if (err) throw err;
+			var find_params = {
+				number: req.body.From,
+				leader: 1
+			}
+			db.collection("users").findOne(find_params, function(err, result){
+				if (err) throw err;
+				sqID = result.squadID;
+				var document = {
+					number: req.body.From,
+					squadID: sqID,
+				}
+				db.collection(sqID).find({}).toArray(function(err, res){
+					var d = 0;
+					var message = "";
+					var yeses = 0;
+					var nos = 0;
+					for(x of res){
+						d++;
+						if(x.vote == 'Y'){
+							yeses++;
+						}else if(x.vote == 'N'){
+							nos++;
+						}
+					}
+					var total = yeses+nos;
+					var yes_percentage = yeses/total;
+					var no_percentage = 1 - yes_percentage;
+					if(yes_percentage >= no_percentage){
+						message = "Alright guys/girls/nonbinary, let's wrap it up!";
+					}else if(yes_percentage < no_percentage){
+						message = "We're still on!";
+					}
+					for(x of res){
+						client.messages.create({
+							to: x.number,
+							from: twilio_number,
+							body: message
+						})
+					}
+					console.log("inside" + message);
+				});
+
+				// db.collection(sqID).find({}).toArray(function(err, res){
+				// 	for(x of res){
+				// 		client.messages.create({
+				// 			to: x.number,
+				// 			from: twilio_number,
+				// 			body: "message"
+				// 		})
+				// 	}
+				// });
+			});
+		});
 	}else if(incoming_msg == 'Y' || incoming_msg == 'N'){
 		//as results come in, compare size of temp collection to number of members in squad.
 		//find squadID first
@@ -66,8 +122,7 @@ app.post('/message', (req, res) => {
 			if (err) throw err;
 			var sqID = "";
 			var find_params = {
-				number: req.body.From,
-				leader: 1
+				number: req.body.From
 			}
 			db.collection("users").findOne(find_params, function(err, result){
 				if (err) throw err;
